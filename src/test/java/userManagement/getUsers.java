@@ -33,13 +33,18 @@ public class getUsers extends BaseTest {
     String URL = serverAddress + endpoint;
     //SoftAssertionUtil softAssertion = new SoftAssertionUtil();
 
+    String authToken = "QpwL5tke4Pnpja7X4";
+
     @Test
     public void getUserData() {
+        ExtentReport.logInfo("VerifygetUserData");
         given().
-                when().get("https://reqres.in/api/users?page=2").
+                 header("Content-Type", "application/json")
+                .header("Authorization", "Bearer "+authToken)
+                .when().get("https://reqres.in/api/users?page=2").
                 then().
                 assertThat().
-                statusCode(204);
+                statusCode(200);
     }
 
     @Test()
@@ -129,6 +134,8 @@ public class getUsers extends BaseTest {
     public void testGetUsersWithQueryParameters() {
         RestAssured.baseURI = "https://reqres.in/api";
         Response response = given()
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer "+authToken)
                 .queryParam("page", 2)
                 .when()
                 .get("/users")
@@ -153,6 +160,7 @@ public class getUsers extends BaseTest {
         System.out.println("*****************");
         Response resp =
                 given()
+                        .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad ")
                         .queryParam("page", 2)
                         .when()
                         .get("https://reqres.in/api/users");
@@ -164,6 +172,8 @@ public class getUsers extends BaseTest {
     public void testGetUsersWithMultipleQueryParams() {
         Response response =
                 given()
+                        .header("Content-Type", "application/json")
+                        .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad ")
                         .queryParam("page", 2)
                         .queryParam("per_page", 3)
                         .queryParam("rtqsdr", 4)
@@ -176,9 +186,23 @@ public class getUsers extends BaseTest {
     }
 
     @Test
+    public void testCreateUserWithPathParam() {
+        Response response = given()
+                .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad ")
+                .pathParam("id", 8)
+                .when()
+                .get("https://reqres.in/api/users/{id}");
+        int actualStatusCode = response.statusCode();  //RestAssured
+        assertEquals(actualStatusCode, 200); //Testng
+        System.out.println(response.body().asString());
+    }
+
+    @Test
     public void testCreateUserWithFormParam() {
         Response response = given()
                 .contentType("application/x-www-form-urlencoded")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .formParam("name", "John Doe")
                 .formParam("job", "Developer")
                 .when()
@@ -189,14 +213,15 @@ public class getUsers extends BaseTest {
                 .response();
 
         // Assert that the response contains the correct name and job values
-        response.then().body("name", equalTo("John Doe"));
-        response.then().body("job", equalTo("Developer"));
+       response.then().body("name", equalTo("John Doe"));
+       response.then().body("job", equalTo("Developer"));
     }
 
     @Test
     public void testGetUserListWithHeader() {
         given()
                 .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer "+authToken)
                 .when()
                 .get("https://reqres.in/api/users?page=2")
                 .then()
@@ -207,7 +232,7 @@ public class getUsers extends BaseTest {
     @Test
     public void testWithTwoHeaders() {
         given()
-                .header("Authorization", "bearer ywtefdu13tx4fdub1t3ygdxuy3gnx1iuwdheni1u3y4gfuy1t3bx")
+                .header("Authorization", "Bearer QpwL5tke4Pnpja7X4")
                 .header("Content-Type", "application/json")
                 .when()
                 .get("https://reqres.in/api/users?page=2")
@@ -222,7 +247,7 @@ public class getUsers extends BaseTest {
         // Create a Map to hold headers
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
-        headers.put("Authorization", "bearer ywtefdu13tx4fdub1t3ygdxuy3gnx1iuwdheni1u3y4gfuy1t3bx");
+        headers.put("Authorization", "bearer QpwL5tke4Pnpja7X4");
 
         // Send a GET request with headers
         given()
@@ -261,6 +286,7 @@ public class getUsers extends BaseTest {
                        .build();
 
         given()
+                .header("Authorization", "bearer QpwL5tke4Pnpja7X4")
                 .cookie(cookies)
                 .when()
                 .get("https://reqres.in/api/users?page=2")
@@ -287,10 +313,11 @@ public class getUsers extends BaseTest {
 
     @Test(groups = {"SmokeSuite", "RegressionSuite"})
     public void verifyStatusCodeDelete() {
-        ExtentReport.extentlog =
-                ExtentReport.extentreport.
-                        startTest("verifyStatusCodeDelete", "Validate 204 status code for DELETE Method");
+
+                ExtentReport.logInfo("verifyStatusCodeDelete");
         Response resp = given()
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
+                .when()
                 .delete("https://reqres.in/api/users/2");
         assertEquals(resp.getStatusCode(), StatusCode.NO_CONTENT.code);
         System.out.println("verifyStatusCodeDelete executed successfully");
@@ -298,9 +325,7 @@ public class getUsers extends BaseTest {
 
     @Test(groups = "RegressionSuite")
     public void validateWithDataFromPropertiesFile() {
-        ExtentReport.extentlog =
-                ExtentReport.extentreport.
-                        startTest("validateWithDataFromPropertiesFile", "Validate 200 Status Code for GET method");
+        ExtentReport.logInfo("validateWithDataFromPropertiesFile");
         String serverAddress = PropertyReader.propertyReader("config.properties", "serverAddress");
         System.out.println("Server Address is : " + serverAddress);
         Response resp =

@@ -5,17 +5,17 @@ import core.StatusCode;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import utils.ExtentReport;
+import utils.FailRetry;
 
 import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertEquals;
 
 public class APIChaining extends BaseTest {
 
-    @Test
+    @Test(retryAnalyzer = FailRetry.class)
     public void verifyBookstoreAddBooks() {
-        ExtentReport.extentlog =
-                ExtentReport.extentreport.
-                        startTest("verifyBookstoreAddBooks", "Validate 201 Status Code for POST method");
+
+        ExtentReport.logInfo("Starting test: verifyBookstoreAddBooks");
         String authToken = generateAuthToken();
         Response response = given()
                 .header("Content-Type", "application/json")

@@ -11,9 +11,7 @@ import static org.testng.Assert.assertEquals;
 public class getErgast extends BaseTest {
     @Test(description = "Validate the status code for GET users endpoint", groups = "RegressionSuite")
     public void validateResponseBodyGetPathParam() {
-        ExtentReport.extentlog =
-                ExtentReport.extentreport.
-                        startTest("validateResponseBodyGetPathParam", "Validate 200 Status Code for GET Ergast");
+        ExtentReport.logInfo("validateResponseBodyGetPathParam");
         Response resp = given()
                 .pathParam("raceSeason", 2016)
                 .when()
