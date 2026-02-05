@@ -1,6 +1,11 @@
 package userManagement;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import core.StatusCode;
+import io.restassured.mapper.ObjectMapper;
+import io.restassured.mapper.ObjectMapperDeserializationContext;
+import io.restassured.mapper.ObjectMapperSerializationContext;
 import io.restassured.response.Response;
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
@@ -36,6 +41,7 @@ public class postUsers {
 
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body("{\"name\":\"morpheus\",\"job\":\"leader\"}")
                 .when()
                 .post("https://reqres.in/api/users");
@@ -49,6 +55,7 @@ public class postUsers {
 
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body("{\"name\":\"sidharth\",\"job\":\"LeadSDET\"}")
                 .when()
                 .put("https://reqres.in/api/users/2");
@@ -62,6 +69,7 @@ public class postUsers {
 
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body("{\"name\":\"morpheus\"}")
                 .when()
                 .patch("https://reqres.in/api/users/2");
@@ -75,6 +83,7 @@ public class postUsers {
 
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body(IOUtils.toString(fileInputStreamMethod("postRequestBody.json")))
                 .when()
                 .post("https://reqres.in/api/users");
@@ -88,6 +97,7 @@ public class postUsers {
 
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body(IOUtils.toString(fileInputStreamMethod("patchRequestBody.json")))
                 .when()
                 .patch("https://reqres.in/api/users/2");
@@ -101,6 +111,7 @@ public class postUsers {
 
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body(IOUtils.toString(fileInputStreamMethod("putRequestBody.json")))
                 .when()
                 .put("https://reqres.in/api/users/2");
@@ -117,6 +128,7 @@ public class postUsers {
         postRequest.setName("morpheus");
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body(postRequest)
                 .when()
                 .post("https://reqres.in/api/users");
@@ -138,6 +150,7 @@ public class postUsers {
         postRequest.setLanguages(listLanguage);
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body(postRequest)
                 .when()
                 .post("https://reqres.in/api/users");
@@ -171,6 +184,7 @@ public class postUsers {
 
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body(postRequest)
                 .when()
                 .post("https://reqres.in/api/users");
@@ -183,10 +197,11 @@ public class postUsers {
     public void validatePutWithPojo() {
 
         postRequestBody putRequest = new postRequestBody();
-        putRequest.setJob("Sidharth");
-        putRequest.setName("LeadSDET");
+        putRequest.setJob("Santosh");
+        putRequest.setName("Salesforce QA");
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body(putRequest)
                 .when()
                 .put("https://reqres.in/api/users/2");
@@ -197,9 +212,10 @@ public class postUsers {
     @Test
     public void validatePatchWithPojo() throws IOException {
         postRequestBody patchRequest = new postRequestBody();
-        patchRequest.setJob("morpheus");
+        patchRequest.setName("morpheus");
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body(patchRequest)
                 .when()
                 .patch("https://reqres.in/api/users/2");
@@ -209,18 +225,23 @@ public class postUsers {
     }
 
     @Test
-    public void validatePatchWithResponsePojo() {
-        String job = "morpheus";
+    public void validatePatchWithResponsePojo() throws IOException {
+        String name = "morpheus";
+        String updatedAt ="2026-02-02T13:48:48.414Z";
         postRequestBody patchRequest = new postRequestBody();
-        patchRequest.setJob(job);
+        patchRequest.setName(name);
+        patchRequest.setUpdatedAt(updatedAt);
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body(patchRequest)
                 .when()
                 .patch("https://reqres.in/api/users/2");
         postRequestBody responseBody = response.as(postRequestBody.class);
-        System.out.println(responseBody.getJob());
-        assertEquals(responseBody.getJob(), job);
+        System.out.println("name:" + responseBody.getName());
+        System.out.println("Updated At: " + responseBody.getUpdatedAt());
+        assertEquals(responseBody.getName(), name);
+        assertEquals(responseBody.getUpdatedAt(), updatedAt);
         assertEquals(response.getStatusCode(), StatusCode.SUCCESS.code);
         System.out.println("validatePatchWithPojo executed successfully");
         System.out.println(response.getBody().asString());
@@ -253,6 +274,7 @@ public class postUsers {
 
         Response response = given()
                 .header("Content-Type", "application/json")
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .body(postRequest)
                 .when()
                 .post("https://reqres.in/api/users");

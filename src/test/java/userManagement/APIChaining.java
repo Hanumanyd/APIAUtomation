@@ -14,13 +14,13 @@ public class APIChaining extends BaseTest {
 
     @Test(retryAnalyzer = FailRetry.class)
     public void verifyBookstoreAddBooks() {
-
+//       Note : isbn everytime it takes new one else it will give 400 bad request.
         ExtentReport.logInfo("Starting test: verifyBookstoreAddBooks");
         String authToken = generateAuthToken();
         Response response = given()
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer "+authToken)
-                .body("{\"userId\":\"6fdcd89a-7efd-407e-b5ae-7d873cb9c16f\",\"collectionOfIsbns\":[{\"isbn\":\"9781593275846\"}]}")
+                .body("{\"userId\":\"6fdcd89a-7efd-407e-b5ae-7d873cb9c16f\",\"collectionOfIsbns\":[{\"isbn\":\"9781593277574\"}]}")
                 .when()
                 .post("https://bookstore.toolsqa.com/BookStore/v1/Books");
         assertEquals(response.getStatusCode(), StatusCode.CREATED.code);
