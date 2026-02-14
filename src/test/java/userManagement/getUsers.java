@@ -1,5 +1,7 @@
 package userManagement;
 
+import com.aventstack.extentreports.gherkin.model.Given;
+import com.aventstack.extentreports.gherkin.model.When;
 import core.BaseTest;
 import core.StatusCode;
 import io.restassured.RestAssured;
@@ -31,7 +33,8 @@ public class getUsers extends BaseTest {
     String serverAddress = PropertyReader.propertyReader("config.properties", "server");
     String endpoint = getUrl("endpoint");
     String URL = serverAddress + endpoint;
-    //SoftAssertionUtil softAssertion = new SoftAssertionUtil();
+    //
+    // SoftAssertionUtil softAssertion = new SoftAssertionUtil();
 
     String authToken = "QpwL5tke4Pnpja7X4";
 
@@ -41,7 +44,8 @@ public class getUsers extends BaseTest {
         given().
                  header("Content-Type", "application/json")
                 .header("Authorization", "Bearer "+authToken)
-                .when().get("https://reqres.in/api/users?page=2").
+                .when()
+                .get("https://reqres.in/api/users?page=2").
                 then().
                 assertThat().
                 statusCode(200);
@@ -49,6 +53,7 @@ public class getUsers extends BaseTest {
 
     @Test()
     public void validateGetResponseBody() {
+        ExtentReport.logInfo("validateGetResponseBody");
         // Set base URI for the API
         RestAssured.baseURI = "https://jsonplaceholder.typicode.com";
 
@@ -57,6 +62,7 @@ public class getUsers extends BaseTest {
                 .when()
                 .get("/todos/1")
                 .then()
+
                 .assertThat()
                 .statusCode(200)
                 .body(not(isEmptyString()))
@@ -66,6 +72,7 @@ public class getUsers extends BaseTest {
 
     @Test(description = "validateResponseHasItems" )
     public void validateResponseHasItems() {
+        ExtentReport.logInfo("validateResponseHasItems");
         // Set base URI for the API
         RestAssured.baseURI = "https://jsonplaceholder.typicode.com";
 
@@ -120,7 +127,7 @@ public class getUsers extends BaseTest {
     //validate single field from an list of map
     @Test
     public void testGetUserList() {
-
+        ExtentReport.logInfo("testGetUserList");
         RestAssured.baseURI = "https://jsonplaceholder.typicode.com";
         given()
                 .when()
@@ -132,6 +139,7 @@ public class getUsers extends BaseTest {
 
     @Test
     public void testGetUsersWithQueryParameters() {
+        ExtentReport.logInfo("testGetUsersWithQueryParameters");
         RestAssured.baseURI = "https://reqres.in/api";
         Response response = given()
                 .header("Content-Type", "application/json")
@@ -243,7 +251,7 @@ public class getUsers extends BaseTest {
 
     @Test
     public void testTwoHeadersWithMap() {
-
+        ExtentReport.logInfo("testTwoHeadersWithMap");
         // Create a Map to hold headers
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -262,6 +270,7 @@ public class getUsers extends BaseTest {
 
     @Test
     public void testFetchHeaders() {
+        ExtentReport.logInfo("testFetchHeaders");
         Response response = given()
                 .when()
                 .get("https://reqres.in/api/users?page=2")
@@ -297,6 +306,7 @@ public class getUsers extends BaseTest {
 
     @Test
     public void testFetchCookies() {
+        ExtentReport.logInfo("testFetchCookies");
         Response response = given()
                 .when()
                 .get(URL + "?page=2")
@@ -331,6 +341,7 @@ public class getUsers extends BaseTest {
         Response resp =
                 given()
                         .queryParam("page", 2)
+                        .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                         .when()
                         .get(serverAddress);
         int actualStatusCode = resp.statusCode();  //RestAssured
@@ -347,6 +358,7 @@ public class getUsers extends BaseTest {
         Response resp =
                 given()
                         .queryParam("page", 2)
+                        .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                         .when()
                         .get(URL);
         int actualStatusCode = resp.statusCode();  //RestAssured
@@ -387,9 +399,11 @@ public class getUsers extends BaseTest {
 
     @Test
     public void validateWithSoftAssertUtil() {
+        ExtentReport.logInfo("validateWithSoftAssertUtil");
         RestAssured.baseURI = "https://reqres.in/api";
         Response response = given()
                 .queryParam("page", 2)
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .when()
                 .get("/users")
                 .then()
@@ -417,6 +431,7 @@ public class getUsers extends BaseTest {
         given()
                 .queryParam("id", id)
                 .queryParam("name", name)
+                .header("x-api-key", "reqres_24d7a6cb968c4215aa918d6f655d7cad")
                 .when()
                 .get("https://reqres.in/api/users")
                 .then()
@@ -425,7 +440,7 @@ public class getUsers extends BaseTest {
 
     @Test
     public void Test() throws IOException, ParseException {
-        JsonReader.getJsonArrayData("technology", 2);
+        JsonReader.getJsonArrayData("languages", 2);
         JSONArray jsonArray = getJsonArray("contact");
         Iterator<String> iterator = jsonArray.iterator();
         while (iterator.hasNext()) {
