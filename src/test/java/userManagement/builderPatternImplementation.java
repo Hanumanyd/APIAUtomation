@@ -1,5 +1,7 @@
 package userManagement;
 
+import com.sun.net.httpserver.Authenticator;
+import core.StatusCode;
 import io.restassured.RestAssured;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
